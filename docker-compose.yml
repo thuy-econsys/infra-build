@@ -1,0 +1,21 @@
+services:
+  infra:
+    container_name: infra
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    environment:
+      - AWS_PROFILE=default
+      - AWS_REGION=us-gov-west-1
+      - REMOTE_STATE_BUCKET=econsys-gov-security-infrastructure-test
+      - REMOTE_STATE_PROFILE=econsys-gov-security-infrastructure-test
+      - STATE_LOCK_DYNAMODB_TABLE=econsys-gov-security-infrastructure-test
+      - TZ=America/New_York
+    volumes:
+      - $HOME/.aws:/opt/.aws:ro
+      - .:/opt/infra-app
+    ports:
+      - 3001:3001
+    restart: unless-stopped
