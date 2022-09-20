@@ -1,14 +1,15 @@
-ARG ALPINE_VERSION=latest
+ARG ALPINE_VERSION
 
 FROM alpine:${ALPINE_VERSION} as BuildImage
 
 ENV APP=infra \
-    APP_HOME=/opt \
-    TERRAFORM_VERSION=0.13.7 \
-    TERRAGRUNT_VERSION=0.25.5 \
-    PACKER_VERSION=1.8.3 \
-    UID=1000 \
-    GID=1000
+    APP_HOME=/opt  
+
+ARG TERRAFORM_VERSION
+ARG TERRAGRUNT_VERSION
+ARG PACKER_VERSION
+ARG UID
+ARG GID
 
 # install packages and dependencies
 RUN apk update && apk upgrade --available && apk add --no-cache \
@@ -23,23 +24,16 @@ RUN apk update && apk upgrade --available && apk add --no-cache \
   # packer
   curl -sSLo /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip /tmp/packer.zip -d /usr/local/bin/ && \ 
+  # clean up
   rm /tmp/*.zip && \
+  # add non-root user, set non-root user shell and $HOME
   addgroup -g $GID -S $APP && \
-  adduser -u $UID -S $APP -G $APP -s /bin/ash --home $APP_HOME
-
+  adduser -u $UID -S $APP -G $APP -s /bin/ash --home $APP_HOME -g "${APP} user"
 
 # set container Working Directory and copy over local src files
 WORKDIR ${APP_HOME}/${APP}-app
-
-# RUN addgroup -g $GID -S $APP && \
-#     adduser -u $UID -S $APP -G $APP -s /bin/ash --home $APP_HOME && \
-#     apk add --no-cache sudo && \
-#     echo '%wheel ALL=(ALL) ALL' > /etc/sudoers.d/wheel
-    # echo '${APP} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    # adduser $APP wheel
-
+# recursively change app directory ownership to non-root user
 COPY --chown=${APP}:${APP} ./ ${APP_HOME}/${APP}-app
 
+# switch to non-root user
 USER $APP
-
-EXPOSE 3001
