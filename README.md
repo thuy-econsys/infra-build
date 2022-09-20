@@ -1,31 +1,63 @@
+# Docker
 
-run container(s) in background; stop container(s)
 ```bash
-$ docker compose up -d --build
+# preview configs
+$ docker compose -f docker-compose.yml --env-file .env config
+
+# build image, if none exists, and run container(s) in the background in detached mode
+$ docker compose -f docker-compose.yml --env-file .env up -d
+
+# stops container(s)
+$ docker compose stop
+
+# stop and removes container(s), and networks attached
 $ docker compose down
 ```
 
-access interactive shell of running container:
+access interactive shell of running container of selected Docker Compose service:
 ```bash
 $ docker compose exec infra /bin/ash
 ```
 
-clean out all including dangling images and containers
+clean out all, including dangling and unreferenced images, stopped containers, and networks
 ```bash 
 $ docker system prune -af
 ```
 
-AWS has a Docker container for running AWS CLI
+AWS has a Docker container for running AWS CLI:
 ```bash
 $ docker container run --rm -it -v ~/.aws:/root/.aws -e AWS_PROFILE=default amazon/aws-cli s3 ls
 ```
 
-ensure it can run AWS CLI API calls
+## .env
+
+some necessary variables for your `.env` file:
+```
+ALPINE_VERSION = latest
+TERRAFORM_VERSION = 0.13.7
+TERRAGRUNT_VERSION = 0.25.5
+PACKER_VERSION = 1.8.3
+UID = 1000
+GID = 1000
+AWS_ACCESS_KEY_ID = <aws_access_key_id>
+AWS_SECRET_ACCESS_KEY = <aws_secret_access_key>
+AWS_PROFILE = default
+AWS_REGION = us-gov-west-1
+REMOTE_STATE_BUCKET = <S3-bucket>
+REMOTE_STATE_PROFILE = <S3-bucket>
+STATE_LOCK_DYNAMODB_TABLE = <S3-bucket>
+```
+
+# AWS
+
+ensure container can run AWS CLI API calls:
 ```bash
 ~/infra-app $ aws sts get-caller-identity
 ```
 
-if there's more than one AWS Account, export the env for the requested *named profiled* 
+# Packer
+
+run Packer job inside container:
 ```bash
-~/infra-app $ export AWS_PROFILE=default
+~/infra-app $ packer build -var-file=infrastructure/packer/packer-vars-stage.json -var 'source_ami_rhel7_hvm=ami-04ccdf5793086ea95' -only 'minimal-rhel-7-hvm' infrastructure/packer/spel/minimal-linux.json
 ```
