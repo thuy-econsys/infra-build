@@ -4,22 +4,22 @@
 # preview configs
 $ docker compose -f docker-compose.yml --env-file .env config
 
-# build image, if none exists, and run container(s)
+# build image, if none exists, and run container(s) in the background in detached mode
 $ docker compose -f docker-compose.yml --env-file .env up -d
 
 # stops container(s)
 $ docker compose stop
 
-# stop and removes container(s), and network attached
+# stop and removes container(s), and networks attached
 $ docker compose down
 ```
 
-access interactive shell of running container:
+access interactive shell of running container of selected Docker Compose service:
 ```bash
 $ docker compose exec infra /bin/ash
 ```
 
-clean out all including dangling images and containers
+clean out all, including dangling and unreferenced images, stopped containers, and networks
 ```bash 
 $ docker system prune -af
 ```
@@ -57,7 +57,7 @@ ensure container can run AWS CLI API calls:
 
 # Packer
 
-run Packer job:
+run Packer job inside container:
 ```bash
 ~/infra-app $ packer build -var-file=infrastructure/packer/packer-vars-stage.json -var 'source_ami_rhel7_hvm=ami-04ccdf5793086ea95' -only 'minimal-rhel-7-hvm' infrastructure/packer/spel/minimal-linux.json
 ```
