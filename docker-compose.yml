@@ -4,18 +4,28 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    stdin_open: true
-    tty: true
+      args:
+        - ALPINE_VERSION=$ALPINE_VERSION
+        - TERRAFORM_VERSION=$TERRAFORM_VERSION
+        - TERRAGRUNT_VERSION=$TERRAGRUNT_VERSION
+        - PACKER_VERSION=$PACKER_VERSION
+        - UID=$UID
+        - GID=$GID
+    env_file:
+      - .env
     environment:
-      - AWS_PROFILE=default
-      - AWS_REGION=us-gov-west-1
-      - REMOTE_STATE_BUCKET=econsys-gov-security-infrastructure-test
-      - REMOTE_STATE_PROFILE=econsys-gov-security-infrastructure-test
-      - STATE_LOCK_DYNAMODB_TABLE=econsys-gov-security-infrastructure-test
-      - TZ=America/New_York
+      - AWS_PROFILE=$AWS_PROFILE
+      - AWS_REGION=$AWS_REGION
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+      - REMOTE_STATE_BUCKET=$REMOTE_STATE_BUCKET
+      - REMOTE_STATE_PROFILE=$REMOTE_STATE_PROFILE
+      - STATE_LOCK_DYNAMODB_TABLE=$STATE_LOCK_DYNAMODB_TABLE
     volumes:
       - $HOME/.aws:/opt/.aws:ro
       - .:/opt/infra-app
     ports:
       - 3001:3001
+    stdin_open: true
+    tty: true
     restart: unless-stopped
