@@ -7,7 +7,10 @@ $ docker compose -f docker-compose.yml --env-file .env config
 # build image, if none exists, and run container(s)
 $ docker compose -f docker-compose.yml --env-file .env up -d
 
-# stop container(s) and remove as well as dangling images 
+# stops container(s)
+$ docker compose stop
+
+# stop and removes container(s), and network attached
 $ docker compose down
 ```
 
