@@ -40,9 +40,9 @@ AWS_ACCESS_KEY_ID = <aws_access_key_id>
 AWS_SECRET_ACCESS_KEY = <aws_secret_access_key>
 AWS_PROFILE = default
 AWS_REGION = us-gov-west-1
-REMOTE_STATE_BUCKET = econsys-gov-security-infrastructure-test
-REMOTE_STATE_PROFILE = econsys-gov-security-infrastructure-test
-STATE_LOCK_DYNAMODB_TABLE = econsys-gov-security-infrastructure-test
+REMOTE_STATE_BUCKET = <S3-bucket>
+REMOTE_STATE_PROFILE = <S3-bucket>
+STATE_LOCK_DYNAMODB_TABLE = <S3-bucket>
 ```
 
 # AWS
