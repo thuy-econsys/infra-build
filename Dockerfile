@@ -1,6 +1,6 @@
 ARG ALPINE_VERSION
 
-FROM alpine:${ALPINE_VERSION} as BuildImage
+FROM alpine:${ALPINE_VERSION}
 
 ENV APP=infra \
     APP_HOME=/opt  
