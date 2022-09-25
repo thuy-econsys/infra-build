@@ -1,8 +1,8 @@
-SHELL = /bin/bash
-BUILD_PATH = ./infrastructure/packer
-VAR_FILE = ${BUILD_PATH}/packer-vars-stage.json
-SRC_AMI = ami-04ccdf5793086ea95
-BUILD = minimal-rhel-7-hvm
+SHELL := /bin/bash
+BUILD_PATH := ./infrastructure/packer
+VAR_FILE := ${BUILD_PATH}/packer-vars-stage.json
+SRC_AMI := ami-04ccdf5793086ea95
+BUILD := minimal-rhel-7-hvm
 
 .PHONY: help check-setup pack-harden pack-all burp dsm forensics harden jenkins	jumpbox ldap nessus openvpn spel splunk
 
@@ -16,7 +16,7 @@ help:
 	@echo ""
 	@echo "                 ### Packer ###"
 	@echo ""
-	@echo "                 Can be run as individual jobs or packed in groups"
+	@echo "                 Can be run as individual jobs, make <COMMAND>, or packed in groups"
 	@echo "      syntax:    pack build -var-file=${VAR_FILE} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
 	@echo ""
 	@echo "    pack-all:  - pack spel, forensics, harden as well as all downstream builds for pack-harden"
