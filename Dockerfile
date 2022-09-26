@@ -13,7 +13,7 @@ ARG GID
 
 # install packages and dependencies
 RUN apk update && apk upgrade --available && apk add --no-cache \
-  curl python3 py3-pip aws-cli && \
+  curl make python3 py3-pip aws-cli && \
   # terraform
   curl -sSLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   unzip /tmp/terraform.zip -d /usr/local/bin/ && \
