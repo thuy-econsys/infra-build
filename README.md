@@ -28,3 +28,17 @@ AWS has a Docker container for running AWS CLI:
 ```bash
 $ docker container run --rm -it -v ~/.aws:/root/.aws -e AWS_PROFILE=default amazon/aws-cli s3 ls
 ```
+
+# settings.json
+
+```javascript
+{
+  // ...
+  "[makefile]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.useTabStops": true
+  },
+  // ...
+}
+```

@@ -3,6 +3,8 @@ BUILD_PATH := ./infrastructure/packer
 VAR_FILE := ${BUILD_PATH}/packer-vars-stage.json
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
+log = $(shell echo " | tee file.log")
+OPTIONS := -debug $log
 
 .PHONY: help check-setup 
 
@@ -37,6 +39,17 @@ check-setup:
 	@if [ -z $REMOTE_STATE_BUCKET ]; then echo "REMOTE_STATE_BUCKET needs to be set"; fi
 	@if [ -z $REMOTE_STATE_PROFILE ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
 	@if [ -z $STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
+
+args:
+ifdef debug
+	@echo adding -debug mode option
+else
+	@echo regular mode
+endif
+
+ifdef log
+	@echo redirect output | tee file.log 
+endif
 
 .PHONY: pack-harden pack-all
 
