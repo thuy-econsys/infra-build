@@ -42,7 +42,7 @@ check-setup:
 
 pack-harden: harden ldap openvpn jumpbox jenkins burp dsm nessus splunk
 
-pack-all: spel forensics harden-all
+pack-all: spel forensics pack-harden
 
 .PHONY: burp dsm forensics harden jenkins jumpbox ldap nessus openvpn spel splunk
 
