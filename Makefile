@@ -30,6 +30,7 @@ check-setup:
 	@if [ -z "$(shell terraform -v)" ]; then echo "Terraform not installed"; fi
 	@if [ -z "$(shell terragrunt -v)" ]; then echo "Terragrunt not installed"; fi
 
+	@if [ -z "${AWS_PROFILE}" ]; then echo "AWS_PROFILE needs to be set"; fi
 	@if [ -z "${AWS_ACCESS_KEY_ID}" ]; then echo "AWS_ACCESS_KEY_ID needs to be set"; fi
 	@if [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then echo "AWS_SECRET_ACCESS_KEY needs to be set"; fi
 	@if [ -z "${AWS_REGION}" ]; then echo "AWS_REGION needs to be set"; fi
