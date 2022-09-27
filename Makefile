@@ -1,10 +1,10 @@
-SHELL := /bin/bash
+SHELL := /bin/ash
 BUILD_PATH := ./infrastructure/packer
 VAR_FILE := ${BUILD_PATH}/packer-vars-stage.json
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
 
-.PHONY: help check-setup pack-harden pack-all burp dsm forensics harden jenkins	jumpbox ldap nessus openvpn spel splunk
+.PHONY: help check-setup 
 
 help:
 	@echo "       usage:    make <COMMAND>"
@@ -37,9 +37,13 @@ check-setup:
 	@if [ -z "${REMOTE_STATE_PROFILE}" ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
 	@if [ -z "${STATE_LOCK_DYNAMODB_TABLE}" ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
 
+.PHONY: pack-harden pack-all
+
 pack-harden: harden ldap openvpn jumpbox jenkins burp dsm nessus splunk
 
 pack-all: spel forensics harden-all
+
+.PHONY: burp dsm forensics harden jenkins jumpbox ldap nessus openvpn spel splunk
 
 burp:
 	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/burpsuite/burp-update.json
