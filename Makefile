@@ -1,4 +1,3 @@
-SHELL := /bin/ash
 BUILD_PATH := ./infrastructure/packer
 VAR_FILE := ${BUILD_PATH}/packer-vars-stage.json
 SRC_AMI := ami-04ccdf5793086ea95
