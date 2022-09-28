@@ -31,13 +31,13 @@ check-setup:
 	@if [ -z "$(shell terraform -v)" ]; then echo "Terraform not installed"; fi
 	@if [ -z "$(shell terragrunt -v)" ]; then echo "Terragrunt not installed"; fi
 
-	@if [ -z $AWS_PROFILE ]; then echo "AWS_PROFILE needs to be set"; fi
-	@if [ -z $AWS_ACCESS_KEY_ID ]; then echo "AWS_ACCESS_KEY_ID needs to be set"; fi
-	@if [ -z $AWS_SECRET_ACCESS_KEY ]; then echo "AWS_SECRET_ACCESS_KEY needs to be set"; fi
-	@if [ -z $AWS_REGION ]; then echo "AWS_REGION needs to be set"; fi
-	@if [ -z $REMOTE_STATE_BUCKET ]; then echo "REMOTE_STATE_BUCKET needs to be set"; fi
-	@if [ -z $REMOTE_STATE_PROFILE ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
-	@if [ -z $STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
+	@if [ -z $$AWS_PROFILE ]; then echo "AWS_PROFILE needs to be set"; fi
+	@if [ -z $$AWS_ACCESS_KEY_ID ]; then echo "AWS_ACCESS_KEY_ID needs to be set"; fi
+	@if [ -z $$AWS_SECRET_ACCESS_KEY ]; then echo "AWS_SECRET_ACCESS_KEY needs to be set"; fi
+	@if [ -z $$AWS_REGION ]; then echo "AWS_REGION needs to be set"; fi
+	@if [ -z $$REMOTE_STATE_BUCKET ]; then echo "REMOTE_STATE_BUCKET needs to be set"; fi
+	@if [ -z $$REMOTE_STATE_PROFILE ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
+	@if [ -z $$STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
 
 args:
 ifdef debug
