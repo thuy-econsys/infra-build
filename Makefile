@@ -1,9 +1,12 @@
-BUILD_PATH := ./infrastructure/packer
-VAR_FILE := ${BUILD_PATH}/packer-vars-stage.json
+BUILD_PATH := $(dir $(firstword $(wildcard */packer/*)))
+env := stage
+VAR_FILE := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
+BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
+OPTS = -debug -var-file=${VAR_FILE}
+PIPED = | tee file.log
+
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
-log = $(shell echo " | tee file.log")
-OPTIONS := -debug $log
 
 .PHONY: help check-setup 
 
@@ -25,7 +28,6 @@ help:
 	@echo ""
 
 check-setup:
-
 	@if [ -z "$(shell aws --version)" ]; then echo "AWS CLI not installed"; else echo AWS account $(shell aws sts get-caller-identity --query Account); fi
 	@if [ -z "$(shell packer -v)" ]; then echo "Packer not installed"; fi
 	@if [ -z "$(shell terraform -v)" ]; then echo "Terraform not installed"; fi
@@ -39,16 +41,35 @@ check-setup:
 	@if [ -z $$REMOTE_STATE_PROFILE ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
 	@if [ -z $$STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
 
-args:
-ifdef debug
-	@echo adding -debug mode option
-else
-	@echo regular mode
+pack-module:
+ifeq ($(debug),)
+	$(info not debugging)
+else ifeq ($(debug),debug)
+	$(info debugging)
 endif
 
-ifdef log
-	@echo redirect output | tee file.log 
+ifeq ($(log),)
+	$(info not logging)
+else ifeq ($(log),log)
+	$(info logging)
 endif
+
+ifeq ($(module),)
+	(@echo no module defined)
+else ifeq ($(module), burp)
+	$(info $(OPTS) $(filter %burp-update.json,$(BUILD_FILES)) $(PIPED))
+else ifeq ($(module), dsm)
+	$(info $(OPTS) $(filter %deep-security.json,$(BUILD_FILES)) $(PIPED))
+else ifeq ($(module), nessus)
+	$(info $(OPTS) $(filter %nessus-scanner.json,$(BUILD_FILES)) $(PIPED))
+else ifeq ($(module), spel)
+	$(info $(OPTS) $(filter %minimal-linux.json,$(BUILD_FILES)) $(PIPED))
+else ifeq ($(module), $(module))
+	$(info $(OPTS) $(filter %$(module).json,$(BUILD_FILES)) $(PIPED))
+else
+	$(error not sure if it gets here...)
+endif
+
 
 .PHONY: pack-harden pack-all
 
