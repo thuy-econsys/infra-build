@@ -4,6 +4,7 @@ VAR_FILE := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
 VARFILE_ARG := -var-file=${VAR_FILE}
 BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
 PACK_CMD := @packer build
+PIPED = | tee file.log
 
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
@@ -49,9 +50,10 @@ else ifeq ($(debug),"-debug")
 endif
 
 ifeq ($(log),)
-	$(info not logging)
+	@echo not logging
+	$(eval PIPED = "")
 else ifeq ($(log),log)
-	$(info logging)
+	@echo logging
 endif
 
 ifeq ($(module),)
