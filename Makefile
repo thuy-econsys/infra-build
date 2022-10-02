@@ -1,9 +1,9 @@
 BUILD_PATH := $(dir $(firstword $(wildcard */packer/*)))
 env := stage
 VAR_FILE := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
+VARFILE_ARG := -var-file=${VAR_FILE}
 BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
-OPTS = -debug -var-file=${VAR_FILE}
-PIPED = | tee file.log
+PACK_CMD := @packer build
 
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
@@ -21,7 +21,7 @@ help:
 	@echo "                 ### Packer ###"
 	@echo ""
 	@echo "                 Can be run as individual jobs, make <COMMAND>, or packed in groups"
-	@echo "      syntax:    pack build -var-file=${VAR_FILE} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
+	@echo "      syntax:    ${PACK_CMD} ${VARFILE_ARG} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
 	@echo ""
 	@echo "    pack-all:  - pack spel, forensics, harden as well as all downstream builds for pack-harden"
 	@echo " pack-harden:  - pack harden, as well as all downstream builds: burp, dsm, jenkins, jumpbox, ldap, nessus, openvpn, splunk"
@@ -43,9 +43,9 @@ check-setup:
 
 pack-module:
 ifeq ($(debug),)
-	$(info not debugging)
-else ifeq ($(debug),debug)
-	$(info debugging)
+	@echo not debugging 
+else ifeq ($(debug),"-debug")
+	@echo $(debug)
 endif
 
 ifeq ($(log),)
@@ -55,17 +55,17 @@ else ifeq ($(log),log)
 endif
 
 ifeq ($(module),)
-	(@echo no module defined)
+	@echo no module defined
 else ifeq ($(module), burp)
-	$(info $(OPTS) $(filter %burp-update.json,$(BUILD_FILES)) $(PIPED))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %burp-update.json,$(BUILD_FILES))
 else ifeq ($(module), dsm)
-	$(info $(OPTS) $(filter %deep-security.json,$(BUILD_FILES)) $(PIPED))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %deep-security.json,$(BUILD_FILES))
 else ifeq ($(module), nessus)
-	$(info $(OPTS) $(filter %nessus-scanner.json,$(BUILD_FILES)) $(PIPED))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %nessus-scanner.json,$(BUILD_FILES))
 else ifeq ($(module), spel)
-	$(info $(OPTS) $(filter %minimal-linux.json,$(BUILD_FILES)) $(PIPED))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %minimal-linux.json,$(BUILD_FILES))
 else ifeq ($(module), $(module))
-	$(info $(OPTS) $(filter %$(module).json,$(BUILD_FILES)) $(PIPED))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %$(module).json,$(BUILD_FILES))
 else
 	$(error not sure if it gets here...)
 endif
