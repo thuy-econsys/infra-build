@@ -29,7 +29,8 @@ help:
 	@echo ""
 
 check-setup:
-	@if [ -z "$(shell aws --version)" ]; then echo "AWS CLI not installed"; else echo AWS account $(shell aws sts get-caller-identity --query Account); fi
+	@if [ -z "$(shell aws --version)" ]; then echo "AWS CLI not installed"; \
+		else echo AWS account $(shell aws sts get-caller-identity --query Account); fi
 	@if [ -z "$(shell packer -v)" ]; then echo "Packer not installed"; fi
 	@if [ -z "$(shell terraform -v)" ]; then echo "Terraform not installed"; fi
 	@if [ -z "$(shell terragrunt -v)" ]; then echo "Terragrunt not installed"; fi
@@ -59,15 +60,15 @@ endif
 ifeq ($(module),)
 	@echo no module defined
 else ifeq ($(module), burp)
-	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %burp-update.json,$(BUILD_FILES))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %burp-update.json,$(BUILD_FILES)) $(PIPED)
 else ifeq ($(module), dsm)
-	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %deep-security.json,$(BUILD_FILES))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %deep-security.json,$(BUILD_FILES)) $(PIPED)
 else ifeq ($(module), nessus)
-	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %nessus-scanner.json,$(BUILD_FILES))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %nessus-scanner.json,$(BUILD_FILES)) $(PIPED)
 else ifeq ($(module), spel)
-	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %minimal-linux.json,$(BUILD_FILES))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %minimal-linux.json,$(BUILD_FILES)) $(PIPED)
 else ifeq ($(module), $(module))
-	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %$(module).json,$(BUILD_FILES))
+	${PACK_CMD} $(debug) ${VARFILE_ARG} $(filter %$(module).json,$(BUILD_FILES)) $(PIPED)
 else
 	$(error not sure if it gets here...)
 endif
