@@ -4,7 +4,8 @@ VAR_FILE := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
 VARFILE_ARG := -var-file=${VAR_FILE}
 BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
 PACK_CMD := @packer build
-PIPED = | tee file.log
+date = $(shell date +%Y%m%d-%H%M)
+PIPED = | tee build-${date}.log
 
 SRC_AMI := ami-04ccdf5793086ea95
 BUILD := minimal-rhel-7-hvm
