@@ -24,15 +24,20 @@ clean out all, including dangling and unreferenced images, stopped containers, a
 $ docker system prune -af
 ```
 
-Run the following to wherever your Bash aliases are set (.bashrc, .bash_profile, .bash_aliases):
+Run the following to append to whatever file your Bash aliases are set (.bashrc, .bash_profile, .bash_aliases) and then reload the file with `source` to start using the _docker aliases_ from your terminal:
 ```bash
 cat <<-EOF >> ~/.bash_aliases
+
 alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
 alias dex='docker compose exec infra /bin/ash'
 alias ddown='docker compose down'
 alias dclean='docker system prune -af'
 EOF
+
+source ~/.bash_aliases
 ```
+
+[Different Ways to Create and Use Bash Aliases in Linux](https://www.tecmint.com/create-and-use-bash-aliases-in-linux/)
 
 # settings.json
 
