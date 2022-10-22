@@ -24,13 +24,19 @@ clean out all, including dangling and unreferenced images, stopped containers, a
 $ docker system prune -af
 ```
 
-AWS has a Docker container for running AWS CLI:
+Run the following to wherever your Bash aliases are set (.bashrc, .bash_profile, .bash_aliases):
 ```bash
-$ docker container run --rm -it -v ~/.aws:/root/.aws -e AWS_PROFILE=default amazon/aws-cli s3 ls
+cat <<-EOF >> ~/.bash_aliases
+alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
+alias dex='docker compose exec infra /bin/ash'
+alias ddown='docker compose down'
+alias dclean='docker system prune -af'
+EOF
 ```
 
 # settings.json
 
+In Visual Studio Code/Codium, set Makefile settings for tabs and not spaces. Press `Ctrl+Shift+P` to bring up Command Palette. Type _"open settings"_ and select `Open User Settings (JSON)`. Add the following block to the JSON file that opens up:
 ```javascript
 {
   // ...
