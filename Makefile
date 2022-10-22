@@ -73,35 +73,34 @@ pack-harden: harden ldap openvpn jumpbox jenkins burp dsm nessus splunk
 .PHONY: burp dsm forensics harden jenkins jumpbox ldap nessus openvpn spel splunk
 
 burp:
-	${ECHO_CMD} packing${PACK_OPT} BURP ${LOGGER}
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %burp-update.json, $(BUILD_FILES)) ${LOGGER}
 
 dsm:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/deepsecurity/deep-security.json
-	${PACK_CMD} $(PACK_OPT) ${VARFILE_ARG} $(filter %deep-security.json,$(BUILD_FILES)) ${LOGGER}
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %deep-security.json, $(BUILD_FILES)) ${LOGGER}
 
 forensics:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/forensics/forensics.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %forensics.json, $(BUILD_FILES)) ${LOGGER}
 
 harden:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/harden/harden.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %harden.json, $(BUILD_FILES)) ${LOGGER}
 
 jenkins:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/jenkins/jenkins.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %jenkins.json, $(BUILD_FILES)) ${LOGGER}
 
 jumpbox:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/jumpbox/jumpbox.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %jumpbox.json, $(BUILD_FILES)) ${LOGGER}
 
 ldap:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/ldap/ldap.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %ldap.json, $(BUILD_FILES)) ${LOGGER}
 
 nessus:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/nessus/nessus-scanner.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %nessus-scanner.json, $(BUILD_FILES)) ${LOGGER}
 
 openvpn:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/openvpn/openvpn.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %openvpn.json, $(BUILD_FILES)) ${LOGGER}
 
 spel:
-	@packer build -var-file=${VAR_FILE} -var source_ami_rhel7_hvm=${SRC_AMI} -only ${BUILD} ${BUILD_PATH}/spel/minimal-linux.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} ${SPEL_OPT} $(filter %minimal-linux.json, $(BUILD_FILES)) ${LOGGER}
 
 splunk:
-	@packer build -var-file=${VAR_FILE} ${BUILD_PATH}/splunk/splunk.json
+	${ECHO_CMD} $(PACK_OPT) ${VARFILE_OPT} $(filter %splunk.json, $(BUILD_FILES)) ${LOGGER}
