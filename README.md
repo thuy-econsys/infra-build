@@ -24,40 +24,27 @@ clean out all, including dangling and unreferenced images, stopped containers, a
 $ docker system prune -af
 ```
 
-AWS has a Docker container for running AWS CLI:
+Run the following to wherever your Bash aliases are set (.bashrc, .bash_profile, .bash_aliases):
 ```bash
-$ docker container run --rm -it -v ~/.aws:/root/.aws -e AWS_PROFILE=default amazon/aws-cli s3 ls
+cat <<-EOF >> ~/.bash_aliases
+alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
+alias dex='docker compose exec infra /bin/ash'
+alias ddown='docker compose down'
+alias dclean='docker system prune -af'
+EOF
 ```
 
-## .env
+# settings.json
 
-some necessary variables for your `.env` file:
-```
-ALPINE_VERSION = latest
-TERRAFORM_VERSION = 0.13.7
-TERRAGRUNT_VERSION = 0.25.5
-PACKER_VERSION = 1.8.3
-UID = 1000
-GID = 1000
-AWS_ACCESS_KEY_ID = <aws_access_key_id>
-AWS_SECRET_ACCESS_KEY = <aws_secret_access_key>
-AWS_PROFILE = default
-AWS_REGION = us-gov-west-1
-REMOTE_STATE_BUCKET = <S3-bucket>
-REMOTE_STATE_PROFILE = <S3-bucket>
-STATE_LOCK_DYNAMODB_TABLE = <S3-bucket>
-```
-
-# AWS
-
-ensure container can run AWS CLI API calls:
-```bash
-~/infra-app $ aws sts get-caller-identity
-```
-
-# Packer
-
-run Packer job inside container:
-```bash
-~/infra-app $ packer build -var-file=infrastructure/packer/packer-vars-stage.json -var 'source_ami_rhel7_hvm=ami-04ccdf5793086ea95' -only 'minimal-rhel-7-hvm' infrastructure/packer/spel/minimal-linux.json
+In Visual Studio Code/Codium, set Makefile settings for tabs and not spaces. Press `Ctrl+Shift+P` to bring up Command Palette. Type _"open settings"_ and select `Open User Settings (JSON)`. Add the following block to the JSON file that opens up:
+```javascript
+{
+  // ...
+  "[makefile]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "editor.useTabStops": true
+  },
+  // ...
+}
 ```
