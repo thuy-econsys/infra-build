@@ -7,11 +7,11 @@ ECHO_CMD := @echo
 PACK_CMD := @packer build
 PACK_OPT := ""
 timestamp = $(shell date +%Y%m%d-%H%M)
-LOGGER := ""
+LOGGER := | tee build-${timestamp}.log
 
 SRC_AMI := ami-04ccdf5793086ea95
 AMI := minimal-rhel-7-hvm
-SPEL_OPTS := -var source_ami_rhel7_hvm=${SRC_AMI} -only ${AMI}
+SPEL_OPT := -var source_ami_rhel7_hvm=${SRC_AMI} -only ${AMI}
 
 .PHONY: help check-setup
 
@@ -51,8 +51,8 @@ check-setup:
 .PHONY: pack pack-harden pack-all
 
 pack:
-ifeq (log, $(filter log, $(MAKECMDGOALS)))
-	$(eval LOGGER=| tee build-${timestamp}.log)
+ifneq (log, $(filter log, $(MAKECMDGOALS)))
+	$(eval LOGGER="")
 	${ECHO_CMD} logging
 endif
 
