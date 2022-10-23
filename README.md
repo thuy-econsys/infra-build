@@ -32,6 +32,7 @@ alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
 alias dex='docker compose exec infra /bin/ash'
 alias ddown='docker compose down'
 alias dclean='docker system prune -af'
+alias dlist='docker ps -a'
 EOF
 
 source ~/.bash_aliases
