@@ -26,7 +26,7 @@ help:
 	@echo "                 ### Packer ###"
 	@echo ""
 	@echo "                 Can be run as individual jobs, make <COMMAND>, or packed in groups"
-	@echo "      syntax:    ${PACK_CMD} ${VARFILE_ARG} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
+	@echo "      syntax:    pack build ${VARFILE_OPT} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
 	@echo ""
 	@echo "    pack-all:  - pack spel, forensics, harden as well as all downstream builds for pack-harden"
 	@echo " pack-harden:  - pack harden, as well as all downstream builds: burp, dsm, jenkins, jumpbox, ldap, nessus, openvpn, splunk"
@@ -51,14 +51,13 @@ check-setup:
 .PHONY: pack pack-harden pack-all
 
 pack:
-
 ifeq (log, $(filter log, $(MAKECMDGOALS)))
-	$(eval LOGGER="| tee build-${timestamp}.log")
+	$(eval LOGGER=| tee build-${timestamp}.log)
 	${ECHO_CMD} logging
 endif
 
 ifeq (debug, $(filter debug, $(MAKECMDGOALS)))
-	$(eval PACK_OPT=" -debug")
+	$(eval PACK_OPT=-debug)
 	${ECHO_CMD} debugging
 endif
 
