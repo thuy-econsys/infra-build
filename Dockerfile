@@ -8,7 +8,7 @@ ENV APP=infra \
 ARG TERRAFORM_VERSION
 ARG TERRAGRUNT_VERSION
 ARG PACKER_VERSION
-ARG GLIBC_PKG_PREFIX
+ARG GLIBC_URL
 ARG GLIBC_VERSION
 ARG UID
 ARG GID
@@ -35,9 +35,9 @@ FROM baseimage
 RUN \  
   # GNU C Library compatibility package for Alpine's MUSL libc
   curl -sLo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-  curl -sSLo /tmp/glibc-${GLIBC_VERSION}.apk ${GLIBC_PKG_PREFIX}/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
-  curl -sSLo /tmp/glibc-bin-${GLIBC_VERSION}.apk ${GLIBC_PKG_PREFIX}/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
-  curl -sSLo /tmp/glibc-i18n-${GLIBC_VERSION}.apk ${GLIBC_PKG_PREFIX}/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
+  curl -sSLo /tmp/glibc-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
+  curl -sSLo /tmp/glibc-bin-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
+  curl -sSLo /tmp/glibc-i18n-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
   apk add --no-cache --force-overwrite /tmp/glibc-*.apk && \
   /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
   ln -sf /usr/glibc-compat/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
