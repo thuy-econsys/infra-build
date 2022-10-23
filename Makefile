@@ -16,21 +16,28 @@ SPEL_OPT := -var source_ami_rhel7_hvm=${SRC_AMI} -only ${AMI}
 .PHONY: help check-setup
 
 help:
-	@echo "       usage:    make <COMMAND>"
+	@echo "       USAGE:    make <COMMAND> <OPTION>"
 	@echo ""
 	@echo "COMMANDs:"
 	@echo ""
 	@echo "        help:  - help menu"
 	@echo " check-setup:  - ensure necessary packages are installed, and required Environment Variables set"
 	@echo ""
-	@echo "                 ### Packer ###"
+	@echo "      SYNTAX:    pack -debug build ${VARFILE_OPT} ${BUILD_PATH}/<template_directory>/<template_file>.json | tee build.log"
 	@echo ""
-	@echo "                 Can be run as individual jobs, make <COMMAND>, or packed in groups"
-	@echo "      syntax:    pack build ${VARFILE_OPT} ${BUILD_PATH}/<COMMAND>/<COMMAND>.json"
+	@echo "        pack:  - specific AMI build from the template file"
+	@echo "          EX:    make spel"
 	@echo ""
-	@echo "    pack-all:  - pack spel, forensics, harden as well as all downstream builds for pack-harden"
-	@echo " pack-harden:  - pack harden, as well as all downstream builds: burp, dsm, jenkins, jumpbox, ldap, nessus, openvpn, splunk"
+	@echo "    pack-all:  - build AMI for spel, forensics, harden as well as all downstream builds for pack-harden"
+	@echo " pack-harden:  - build AMI for harden, as well as all downstream builds"
 	@echo ""
+	@echo "OPTIONs:"
+	@echo ""
+	@echo "       debug:  - step through Provisioning steps"
+	@echo "          EX:    make spel debug"
+	@echo ""
+	@echo "         log:  - generate a log with timestamp"
+	@echo "          EX:    make spel debug log"
 
 check-setup:
 	@if [ -z "$(shell aws --version)" ]; then echo "AWS CLI not installed"; \
