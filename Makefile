@@ -9,6 +9,7 @@ PACK_OPT = ""
 timestamp = $(shell date +%Y%m%d-%H%M)
 LOGGER = | tee build-$(timestamp).log
 
+AWS_ACCOUNT := $(shell aws sts get-caller-identity --query Account --output text)
 SRC_AMI := ami-04ccdf5793086ea95
 AMI := minimal-rhel-7-hvm
 SPEL_OPT := -var source_ami_rhel7_hvm=${SRC_AMI} -only ${AMI}
@@ -41,7 +42,11 @@ help:
 
 check-setup:
 	@if [ -z "$(shell aws --version)" ]; then echo "AWS CLI not installed"; \
-		else echo AWS account $(shell aws sts get-caller-identity --query Account); fi
+		elif [ ${AWS_ACCOUNT} -eq 029803331920 ]; then echo "fedhr Prod Env: ${AWS_ACCOUNT}"; \
+		elif [ ${AWS_ACCOUNT} -eq 748723166492 ]; then echo "SiteOps Stage Env: ${AWS_ACCOUNT}"; \
+		elif [ ${AWS_ACCOUNT} -eq 578463482707 ]; then echo "SecOps Stage Env: ${AWS_ACCOUNT}"; \
+		else echo "Unable to find acceptable AWS account"; fi
+
 	@if [ -z "$(shell packer -v)" ]; then echo "Packer not installed"; fi
 	@if [ -z "$(shell terraform -v)" ]; then echo "Terraform not installed"; fi
 	@if [ -z "$(shell terragrunt -v)" ]; then echo "Terragrunt not installed"; fi
