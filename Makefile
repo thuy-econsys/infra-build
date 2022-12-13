@@ -14,7 +14,7 @@ src_ami := ami-04ccdf5793086ea95
 build := minimal-rhel-7-hvm
 SPEL_OPT := -var source_ami_rhel7_hvm=${src_ami} -only ${build}
 
-.PHONY: help check-setup strip-ansi
+.PHONY: help check-setup clean-logs
 
 help:
 	@echo "       USAGE:    make <COMMAND> <OPTIONS>"
@@ -28,7 +28,7 @@ help:
 	@echo "          EX:    make check-setup"
 	@echo ""
 	@echo "       strip:  - recursively strips all log files of ANSI color characters in current working directory"
-	@echo "          EX:    make strip-ansi"
+	@echo "          EX:    make clean-logs"
 	@echo ""
 	@echo "OPTIONs:"
 	@echo "                 Optional arguments that can be entered in any order, or not at all."
@@ -82,7 +82,7 @@ check-setup:
 	@if [ -z $$REMOTE_STATE_PROFILE ]; then echo "REMOTE_STATE_PROFILE needs to be set"; fi
 	@if [ -z $$STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
 
-strip-ansi:
+clean-logs:
 	@sed -i 's|\x1b\[[0-9;]*[Am]||g' $(wildcard *.log)
 
 
@@ -90,7 +90,7 @@ strip-ansi:
 
 pack:
 ifneq (log, $(filter log, $(MAKECMDGOALS)))
-	$(eval LOGGER='')
+	$(eval LOGGER = '')
 endif
 
 ifeq (debug, $(filter debug, $(MAKECMDGOALS)))
@@ -108,34 +108,34 @@ pack-harden: harden ldap openvpn jumpbox jenkins burp dsm nessus splunk
 .PHONY: burp dsm forensics harden jenkins jumpbox ldap nessus openvpn spel splunk
 
 burp:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %burp-update.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %burp-update.json, $(BUILD_FILES))${LOGGER}
 
 dsm:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %deep-security.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %deep-security.json, $(BUILD_FILES))${LOGGER}
 
 forensics:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %forensics.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %forensics.json, $(BUILD_FILES))${LOGGER}
 
 harden:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %harden.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %harden.json, $(BUILD_FILES))${LOGGER}
 
 jenkins:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %jenkins.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %jenkins.json, $(BUILD_FILES))${LOGGER}
 
 jumpbox:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %jumpbox.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %jumpbox.json, $(BUILD_FILES))${LOGGER}
 
 ldap:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %ldap.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %ldap.json, $(BUILD_FILES))${LOGGER}
 
 nessus:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %nessus-scanner.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %nessus-scanner.json, $(BUILD_FILES))${LOGGER}
 
 openvpn:
-	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %openvpn.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %openvpn.json, $(BUILD_FILES))${LOGGER}
 
 spel:
-	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} ${SPEL_OPT} $(filter %minimal-linux.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} ${SPEL_OPT} $(filter %minimal-linux.json, $(BUILD_FILES))${LOGGER}
 
 splunk:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %splunk.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %splunk.json, $(BUILD_FILES))${LOGGER}
