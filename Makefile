@@ -3,9 +3,9 @@ env := stage
 var_file := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
 VARFILE_OPT := -var-file=${var_file}
 BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
-ECHO_CMD := @echo 
+ECHO_CMD := @echo
 PACK_CMD := @packer build
-PACK_OPT = ""
+PACK_OPT = ''
 timestamp = $(shell date +%Y%m%d-%H%M)
 LOGGER =| tee build-$(timestamp).log
 
@@ -14,7 +14,7 @@ src_ami := ami-04ccdf5793086ea95
 build := minimal-rhel-7-hvm
 SPEL_OPT := -var source_ami_rhel7_hvm=${src_ami} -only ${build}
 
-.PHONY: help check-setup strip
+.PHONY: help check-setup strip-ansi
 
 help:
 	@echo "       USAGE:    make <COMMAND> <OPTIONS>"
@@ -28,7 +28,7 @@ help:
 	@echo "          EX:    make check-setup"
 	@echo ""
 	@echo "       strip:  - recursively strips all log files of ANSI color characters in current working directory"
-	@echo "          EX:    make strip"
+	@echo "          EX:    make strip-ansi"
 	@echo ""
 	@echo "OPTIONs:"
 	@echo "                 Optional arguments that can be entered in any order, or not at all."
@@ -42,8 +42,11 @@ help:
 	@echo ""
 	@echo "COMMANDs:"
 	@echo ""
-	@echo "        pack:  - specific AMI build from the template file"
+	@echo "        pack:  - specific AMI build from the template file, no logging or debugging"
+	@echo "          EX:    make pack spel"
+	@echo "        NOTE:	this builds AMI w/ automatic logging as it targets a specific Makefile Goal"
 	@echo "          EX:    make spel"
+
 	@echo ""
 	@echo "    pack-all:  - build AMIs for spel and forensics, as well as all downstream builds for pack-harden"
 	@echo "          EX:    make pack-all"
@@ -54,7 +57,9 @@ help:
 	@echo "OPTIONs:"
 	@echo ""
 	@echo "       debug:  - step through Packer provisioning steps"
-	@echo "          EX:    make spel debug"
+	@echo "          EX:    make pack spel debug"
+	@echo "				  - step through Packer provisioning steps w/ logging"
+	@echo "          EX:    make pack spel debug log"
 	@echo ""
 
 check-setup:
@@ -79,6 +84,7 @@ check-setup:
 
 strip-ansi:
 	@sed -i 's|\x1b\[[0-9;]*[Am]||g' $(wildcard *.log)
+
 
 .PHONY: pack pack-harden pack-all
 
@@ -126,10 +132,10 @@ nessus:
 	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %nessus-scanner.json, $(BUILD_FILES)) ${LOGGER}
 
 openvpn:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %openvpn.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} $(filter %openvpn.json, $(BUILD_FILES)) ${LOGGER}
 
 spel:
-	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} ${SPEL_OPT} $(filter %minimal-linux.json, $(BUILD_FILES)) ${LOGGER}
+	${PACK_CMD} ${PACK_OPT}${VARFILE_OPT} ${SPEL_OPT} $(filter %minimal-linux.json, $(BUILD_FILES)) ${LOGGER}
 
 splunk:
 	${PACK_CMD} ${PACK_OPT} ${VARFILE_OPT} $(filter %splunk.json, $(BUILD_FILES)) ${LOGGER}
