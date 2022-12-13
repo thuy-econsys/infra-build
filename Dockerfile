@@ -15,16 +15,16 @@ ARG GID
 
 # install packages and dependencies
 RUN apk update && apk upgrade --available && apk add --no-cache \
-  binutils curl make python3 py3-pip && \
+  binutils make python3 py3-pip && \
   # terraform
-  curl -sSLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+  wget -O /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
   unzip /tmp/terraform.zip -d /usr/local/bin/ && \
   # terragrunt
-  curl -sSLo /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
+  wget -O /tmp/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
   mv /tmp/terragrunt /usr/local/bin/terragrunt && \
   chmod +x /usr/local/bin/terragrunt && \
   # packer
-  curl -sSLo /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+  wget -O /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
   unzip /tmp/packer.zip -d /usr/local/bin/ && \
   # create non-root user, and assign shell and home directory for non-root user
   addgroup -g $GID -S $APP && \
@@ -34,17 +34,17 @@ FROM baseimage
 
 RUN \  
   # GNU C Library compatibility package for Alpine's MUSL libc
-  curl -sLo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-  curl -sSLo /tmp/glibc-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
-  curl -sSLo /tmp/glibc-bin-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
-  curl -sSLo /tmp/glibc-i18n-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
+  wget -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+  wget -O /tmp/glibc-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
+  wget -O /tmp/glibc-bin-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
+  wget -O /tmp/glibc-i18n-${GLIBC_VERSION}.apk ${GLIBC_URL}/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk && \
   apk add --no-cache --force-overwrite /tmp/glibc-*.apk && \
   /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 && \
   ln -sf /usr/glibc-compat/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 && \
   # install AWS CLI V2
-  curl -sLo awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
+  wget -O awscliv2.zip https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip && \
   unzip awscliv2.zip && \
-  ./aws/install  
+  ./aws/install
 
 # based on hardened alpine base image https://github.com/ironpeakservices/iron-alpine/blob/master/Dockerfile
 RUN rm -fr \
@@ -55,7 +55,7 @@ RUN rm -fr \
     /usr/local/aws-cli/v2/*/dist/awscli/examples \
     /var/cache/apk/* \
     /tmp/* && \
-  apk del --no-cache binutils curl
+  apk del --no-cache binutils
 
 # set container Working Directory and copy over local src files
 WORKDIR ${APP_HOME}/${APP}-app
