@@ -58,7 +58,7 @@ help:
 	@echo ""
 	@echo "       debug:  - step through Packer provisioning steps"
 	@echo "          EX:    make pack spel debug"
-	@echo "				  - step through Packer provisioning steps w/ logging"
+	@echo "               - step through Packer provisioning steps w/ logging"
 	@echo "          EX:    make pack spel debug log"
 	@echo ""
 
