@@ -7,7 +7,7 @@ $ docker compose -f docker-compose.yml --env-file .env config
 # build image, if none exists, and run container(s) in the background in detached mode
 $ docker compose -f docker-compose.yml --env-file .env up -d
 
-# stop and removes container(s), and networks attached
+# stop and removes container(s) and networks attached, but retains cache
 $ docker compose down
 ```
 
@@ -16,7 +16,7 @@ access interactive shell of running container for selected Docker Compose servic
 $ docker compose exec infra /bin/ash
 ```
 
-clean out all, including dangling and unreferenced images, stopped containers, and networks
+clean out all, including cache, dangling and unreferenced images, stopped containers, and networks
 ```bash 
 $ docker system prune -af
 ```
@@ -51,7 +51,7 @@ export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile ${AWS_P
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile ${AWS_PROFILE})
 ```
 
-[What is the best way to pass AWS credentials to a Docker container? | Stack Overflow](https://stackoverflow.com/questions/36354423/what-is-the-best-way-to-pass-aws-credentials-to-a-docker-container)
+[What is the best way to pass AWS credentials to a Docker container? | Stack Overflow](https://stackoverflow.com/a/56077990)
 
 
 # settings.json
