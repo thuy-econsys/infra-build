@@ -3,6 +3,7 @@ env := stage
 var_file := $(filter %$(env).json,$(wildcard $(BUILD_PATH)*.json))
 VARFILE_OPT := -var-file=${var_file}
 BUILD_FILES := $(wildcard $(BUILD_PATH)*/*.json)
+LOG_FILES := $(wildcard *.log)
 ECHO_CMD := @echo
 PACK_CMD := @packer build
 PACK_OPT = ''
@@ -83,14 +84,14 @@ check-setup:
 	@if [ -z $$STATE_LOCK_DYNAMODB_TABLE ]; then echo "STATE_LOCK_DYNAMODB_TABLE needs to be set"; fi
 
 clean-logs:
-	@sed -i 's|\x1b\[[0-9;]*[Am]||g' $(wildcard *.log)
+	@sed -i 's|\x1b\[[0-9;]*[Am]||g' ${LOG_FILES}
 
 
 .PHONY: pack pack-harden pack-all
 
 pack:
 ifneq (log, $(filter log, $(MAKECMDGOALS)))
-	$(eval LOGGER = '')
+	$(eval LOGGER='')
 endif
 
 ifeq (debug, $(filter debug, $(MAKECMDGOALS)))
