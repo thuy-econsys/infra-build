@@ -7,14 +7,11 @@ $ docker compose -f docker-compose.yml --env-file .env config
 # build image, if none exists, and run container(s) in the background in detached mode
 $ docker compose -f docker-compose.yml --env-file .env up -d
 
-# stops container(s)
-$ docker compose stop
-
 # stop and removes container(s), and networks attached
 $ docker compose down
 ```
 
-access interactive shell of running container of selected Docker Compose service:
+access interactive shell of running container for selected Docker Compose service:
 ```bash
 $ docker compose exec infra /bin/ash
 ```
@@ -28,17 +25,33 @@ Run the following to append to whatever file your Bash aliases are set (.bashrc,
 ```bash
 cat <<-EOF >> ~/.bash_aliases
 
-alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
-alias dex='docker compose exec infra /bin/ash'
-alias ddown='docker compose down'
-alias dclean='docker system prune -af'
 alias dlist='docker ps -a'
+alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
+alias ddown='docker compose down'
+alias dshell='docker compose exec infra /bin/ash'
+alias dclean='docker system prune -af'
 EOF
 
 source ~/.bash_aliases
 ```
 
 [Different Ways to Create and Use Bash Aliases in Linux](https://www.tecmint.com/create-and-use-bash-aliases-in-linux/)
+
+
+# AWS Environment Variables
+
+Docker set the Environment Variables required for building and deploying. But secrets cannot be persisted this way as it will unnecessarily expose them on the image layers when the image is built. 
+
+Assuming that your default AWS Profile is for the correct AWS Account, run the following to set the environment variables for your AWS credentials. Run `aws configure list` to check what AWS profile is displayed.
+
+```
+export AWS_PROFILE=default
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile ${AWS_PROFILE})
+export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile ${AWS_PROFILE})
+```
+
+[What is the best way to pass AWS credentials to a Docker container? | Stack Overflow](https://stackoverflow.com/questions/36354423/what-is-the-best-way-to-pass-aws-credentials-to-a-docker-container)
+
 
 # settings.json
 
