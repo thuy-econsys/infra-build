@@ -30,6 +30,7 @@ alias dup='docker compose -f docker-compose.yml --env-file .env up -d'
 alias ddown='docker compose down'
 alias dshell='docker compose exec infra /bin/ash'
 alias dclean='docker system prune -af'
+
 EOF
 
 source ~/.bash_aliases
@@ -67,3 +68,23 @@ In Visual Studio Code/Codium, set Makefile settings for tabs and not spaces. Pre
   // ...
 }
 ```
+
+# global gitignore
+
+add to _global gitignore_ file to remove Git tracking for the current repo directory 
+
+```bash
+cat <<-EOF >> ~/.gitignore_global
+
+# packing automation files
+/.dockerignore
+/.env
+/docker-compose.yml
+/Dockerfile
+/Makefile
+/packer-init.pkr.hcl
+
+EOF
+```
+
+[Configuring ignored files for all repositories on your computer | GitHub docs](https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files#configuring-ignored-files-for-all-repositories-on-your-computer)
