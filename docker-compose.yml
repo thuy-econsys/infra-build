@@ -1,6 +1,6 @@
 services:
   infra:
-    container_name: infra
+    container_name: $CONTAINER_NAME
     build:
       context: ./
       dockerfile: Dockerfile
@@ -24,7 +24,7 @@ services:
       - $HOME/.aws:/opt/.aws:ro
       - .:/opt/infra-app
     ports:
-      - 3001:3001
+      - $PORT:$PORT
     stdin_open: true
     tty: true
     restart: unless-stopped
